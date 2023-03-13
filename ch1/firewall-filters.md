@@ -1,4 +1,5 @@
-# Firewall filter for RE protection
+- Configure an IPv4 firewall filter allowing protocol messages from AH, BFD, VRRP, RIP, OSPF, RSVP, LDP, PIM, IGMP, MSDP protocols.
+
 
 ```
 set firewall family inet filter protect-re term ah from protocol ah
@@ -25,6 +26,14 @@ set firewall family inet filter protect-re term igmp then accept
 set firewall family inet filter protect-re term msdp from protocol tcp
 set firewall family inet filter protect-re term msdp from port msdp
 set firewall family inet filter protect-re term msdp then accept
+```
+- Configure the firewall filter so that BGP messages are accepted only from configured BGP neighbors. Make sure that a configured BGP neighbor is automatically allowed in the firewall filter.
+```
+set policy-options prefix-list bgp-peers apply-path "protocols bgp group <*> neighbor <*>"
+set firewall family inet filter protect-re term bgp from source-prefix-list bgp-peers
+set firewall family inet filter protect-re term bgp from protocol tcp
+set firewall family inet filter protect-re term bgp from port bgp
+set firewall family inet filter protect-re term bgp then accept   
 ```
 
 - Configure the firewall filter to accept NTP, RADIUS, DNS, SNMP, SSH, Telnet, and FTP protocols only from the 10.10.1/24 management network.
