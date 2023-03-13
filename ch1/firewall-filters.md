@@ -63,3 +63,25 @@ set firewall family inet filter protect-re term ftp from protocol tcp
 set firewall family inet filter protect-re term ftp from port ftp
 set firewall family inet filter protect-re term ftp from port ftp-data
 ```
+- Configure the firewall filter to accept ICMP and traceroute messages. Ensure that the flow of the messages is limited to 100 kbps with a burst size of 25 K. The excess traffic must be dropped.
+
+```
+set firewall policer re-policer if-exceeding bandwidth-limit 100k
+set firewall policer re-policer if-exceeding burst-size-limit 25k
+set firewall policer re-policer then discard
+set firewall family inet filter protect-re term icmp from protocol icmp
+set firewall family inet filter protect-re term icmp then policer re-policer
+set firewall family inet filter protect-re term icmp then accept
+set firewall family inet filter protect-re term traceroute from protocol udp
+set firewall family inet filter protect-re term traceroute from port 33434-33534
+set firewall family inet filter protect-re term traceroute then policer re-policer
+set firewall family inet filter protect-re term traceroute then accept
+```
+- Configure the firewall filter to discard any other traffic, increment a named drop counter, and send a log message. Apply the firewall filter such as to ensure that it is used for RE protection
+
+```
+set firewall family inet filter protect-re term last then count dropped-packets
+set firewall family inet filter protect-re term last then log
+set firewall family inet filter protect-re term last then discard
+set interfaces lo0 unit 0 family inet filter input protect-re
+```
