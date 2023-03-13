@@ -26,3 +26,31 @@ set firewall family inet filter protect-re term msdp from protocol tcp
 set firewall family inet filter protect-re term msdp from port msdp
 set firewall family inet filter protect-re term msdp then accept
 ```
+
+- Configure the firewall filter to accept NTP, RADIUS, DNS, SNMP, SSH, Telnet, and FTP protocols only from the 10.10.1/24 management network.
+```
+set firewall family inet filter protect-re term snmp from source-address 10.10.1.0/24
+set firewall family inet filter protect-re term snmp from protocol udp
+set firewall family inet filter protect-re term snmp from port snmp
+set firewall family inet filter protect-re term snmp then accept
+set firewall family inet filter protect-re term radius from source-address 10.10.1.0/24
+set firewall family inet filter protect-re term radius from protocol udp
+set firewall family inet filter protect-re term radius from port radius
+set firewall family inet filter protect-re term radius then accept
+set firewall family inet filter protect-re term dns from source-address 10.10.1.0/24
+set firewall family inet filter protect-re term dns from protocol udp
+set firewall family inet filter protect-re term dns from port domain
+set firewall family inet filter protect-re term dns then accept
+set firewall family inet filter protect-re term ssh from source-address 10.10.1.0/24
+set firewall family inet filter protect-re term ssh from protocol tcp
+set firewall family inet filter protect-re term ssh from port ssh
+set firewall family inet filter protect-re term ssh then accept
+set firewall family inet filter protect-re term telnet from source-address 10.10.1.0/24
+set firewall family inet filter protect-re term telnet from protocol tcp
+set firewall family inet filter protect-re term telnet from port telnet
+set firewall family inet filter protect-re term telnet then accept
+set firewall family inet filter protect-re term ftp from source-address 10.10.1.0/24
+set firewall family inet filter protect-re term ftp from protocol tcp
+set firewall family inet filter protect-re term ftp from port ftp
+set firewall family inet filter protect-re term ftp from port ftp-data
+```
